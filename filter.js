@@ -17,32 +17,11 @@ var createButtons = function () {
 			$(uniquelists).each(function () {
 				$('<label class="button-link label-list-filter"><input type="checkbox" class="list-filter" id="filter-' + this + '"> '  + this + '</label>').appendTo('.window-module.gutter');
 			});
-
-			/*=== Labels ===*/
-			//get label classes
-			var labels = [];
-			$('.card-label').each(function(){
-				var c = $(this).attr('class');
-				if($.inArray(c, labels) === -1) labels.push(c);
-			});
-
-			//add select 'all' button
-			$('<hr/>').appendTo('.window-module.gutter');
-			$('<label class="button-link danger label-list-filter"><input type="checkbox" class="label-filter" id="filter-all-labels" checked> All Labels</label>').appendTo('.window-module.gutter');
-			//add button for each label
-			$(labels).each(function () {
-				$('<label class="button-link label-list-filter"><input type="checkbox" class="label-filter" id="filter-' + this.replace('card-label ','') + '"> <span class="'  + this + '"></span></label>').appendTo('.window-module.gutter');
-			});
-
-			$('.list-card-container').addClass('list-set');
-			$('.list-card-container').addClass('label-set');
-			
 			$('.window-module.gutter').on('change', '.list-filter', function (e) {
 				e.preventDefault();
 				var currentId = this.id.replace('filter-', '');
 				if (currentId == 'all') {
-					//$('.list-card-container').fadeIn();
-					$('.list-card-container').addClass('list-set');
+					$('.list-card-container').fadeIn();
 					$('.list-filter').not($(this)).attr('checked', false);
 					$(this).parent().siblings('.danger').removeClass('danger');
 					$(this).parent().addClass('danger');
@@ -54,58 +33,15 @@ var createButtons = function () {
 						$(this).parent().addClass('danger');
 						currentId = this.id.replace('filter-', '');
 						cards = $('.list-card-container').find('.list-card-position:contains("' + currentId + '")').parents('.list-card-container').filter(':hidden');
-						$(cards).addClass('list-set');
-						//$(cards).fadeIn();
+						$(cards).fadeIn();
 					});
 					$('.list-filter').not(':checked').each(function() {
 						$(this).parent().removeClass('danger');
 						currentId = this.id.replace('filter-', '');
 						cards = $('.list-card-container').find('.list-card-position:contains("' + currentId + '")').parents('.list-card-container');
-						$(cards).removeClass('list-set');
-						//$(cards).fadeOut();
+						$(cards).fadeOut();
 					});
 				}
-				//hide all show
-				$('.list-card-container').fadeOut();
-				$('.list-card-container.list-set.label-set').fadeIn();
-
-			});
-
-
-
-			//click action
-			$('.window-module.gutter').on('change', '.label-filter', function (e) {
-				e.preventDefault();
-				var currentId = this.id.replace('filter-', '');
-				if (currentId == 'all-labels') {
-					
-					$('.list-card-container').addClass('label-set');
-					//$('.list-card-container').fadeIn();
-					$('.label-filter').not($(this)).attr('checked', false);
-					$(this).parent().siblings('.danger').removeClass('danger');
-					$(this).parent().addClass('danger');
-				}
-				else {
-					$('#filter-all-labels').attr('checked', false);
-					$('#filter-all-labels').parent().removeClass('danger');
-					$('.label-filter:checked').each(function() {
-						$(this).parent().addClass('danger');
-						currentId = this.id.replace('filter-', '');
-						cards = $('.list-card-container').find('.'+currentId).parents('.list-card-container').filter(':hidden');
-						$(cards).addClass('label-set');
-						//$(cards).fadeIn();
-					});
-					$('.label-filter').not(':checked').each(function() {
-						$(this).parent().removeClass('danger');
-						currentId = this.id.replace('filter-', '');
-						cards = $('.list-card-container').find('.'+currentId).parents('.list-card-container');
-						$(cards).removeClass('label-set');
-						//$(cards).fadeOut();
-					});
-				}
-				//hide all show
-				$('.list-card-container').fadeOut();
-				$('.list-card-container.list-set.label-set').fadeIn();
 			});
 		}
 	});
