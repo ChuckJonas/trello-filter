@@ -31,6 +31,7 @@ var createButtons = function () {
 			//add select 'all' button
 			$('<hr/>').appendTo('.window-module.gutter');
 			$('<label class="button-link danger label-list-filter"><input type="checkbox" class="label-filter" id="filter-all-labels" checked> All Labels</label>').appendTo('.window-module.gutter');
+			$('<label class="button-link label-list-filter"><input type="checkbox" class="label-filter" id="filter-no-label"> No Label</label>').appendTo('.window-module.gutter');
 			//add button for each label
 			$(labels).each(function () {
 				$('<label class="button-link label-list-filter"><input type="checkbox" class="label-filter" id="filter-' + this.replace('card-label ','') + '"> <span class="'  + this + '"></span></label>').appendTo('.window-module.gutter');
@@ -72,11 +73,12 @@ var createButtons = function () {
 
 
 
-			//click action
+			//Label click action
 			$('.window-module.gutter').on('change', '.label-filter', function (e) {
 				e.preventDefault();
 				var currentId = this.id.replace('filter-', '');
-				if (currentId == 'all-labels') {
+				
+				if (currentId == 'all-labels') { //display everything
 					
 					$('.list-card-container').addClass('label-set');
 					$('.label-filter').not($(this)).attr('checked', false);
@@ -86,16 +88,27 @@ var createButtons = function () {
 				else {
 					$('#filter-all-labels').attr('checked', false);
 					$('#filter-all-labels').parent().removeClass('danger');
+					//add qualified cards to label set
 					$('.label-filter:checked').each(function() {
 						$(this).parent().addClass('danger');
 						currentId = this.id.replace('filter-', '');
-						cards = $('.list-card-container').find('.'+currentId).parents('.list-card-container').filter(':hidden');
+						if(currentId =='no-label'){ //special case for no-label
+							cards = $('.list-card-container').find('.card-labels:not(:has(*))').parents('.list-card-container').filter(':hidden');
+						}else{
+							cards = $('.list-card-container').find('.'+currentId).parents('.list-card-container').filter(':hidden');
+						}
+						
 						$(cards).addClass('label-set');
 					});
+					//remove unqualified cards from label set
 					$('.label-filter').not(':checked').each(function() {
 						$(this).parent().removeClass('danger');
 						currentId = this.id.replace('filter-', '');
-						cards = $('.list-card-container').find('.'+currentId).parents('.list-card-container');
+						if(currentId =='no-label'){ //special case for no-label
+							cards = $('.list-card-container').find('.card-labels:not(:has(*))').parents('.list-card-container');
+						}else{
+							cards = $('.list-card-container').find('.'+currentId).parents('.list-card-container');
+						}
 						$(cards).removeClass('label-set');
 					});
 				}
